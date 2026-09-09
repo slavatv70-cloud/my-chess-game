@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Шахматы против Компьютера (Стабильная версия)</title>
+    <title>Шахматы против Компьютера (Исправлено)</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
         body { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; color: #fff; padding: 20px; background: #141e18; transition: background 0.3s; }
@@ -31,6 +31,7 @@
         /* Лесная тема клеток */
         body.theme-forest .cell:nth-child(8n+1):nth-child(-n+8), body.theme-forest .cell:nth-child(8n+3):nth-child(-n+8), body.theme-forest .cell:nth-child(8n+5):nth-child(-n+8), body.theme-forest .cell:nth-child(8n+7):nth-child(-n+8), body.theme-forest .cell:nth-child(8n+2):nth-child(n+9):nth-child(-n+16), body.theme-forest .cell:nth-child(8n+4):nth-child(n+9):nth-child(-n+16), body.theme-forest .cell:nth-child(8n+6):nth-child(n+9):nth-child(-n+16), body.theme-forest .cell:nth-child(8n+8):nth-child(n+9):nth-child(-n+16), body.theme-forest .cell:nth-child(8n+1):nth-child(n+17):nth-child(-n+24), body.theme-forest .cell:nth-child(8n+3):nth-child(n+17):nth-child(-n+24), body.theme-forest .cell:nth-child(8n+5):nth-child(n+17):nth-child(-n+24), body.theme-forest .cell:nth-child(8n+7):nth-child(n+17):nth-child(-n+24), body.theme-forest .cell:nth-child(8n+2):nth-child(n+25):nth-child(-n+32), body.theme-forest .cell:nth-child(8n+4):nth-child(n+25):nth-child(-n+32), body.theme-forest .cell:nth-child(8n+6):nth-child(n+25):nth-child(-n+32), body.theme-forest .cell:nth-child(8n+8):nth-child(n+25):nth-child(-n+32), body.theme-forest .cell:nth-child(8n+1):nth-child(n+33):nth-child(-n+40), body.theme-forest .cell:nth-child(8n+3):nth-child(n+33):nth-child(-n+40), body.theme-forest .cell:nth-child(8n+5):nth-child(n+33):nth-child(-n+40), body.theme-forest .cell:nth-child(8n+7):nth-child(n+33):nth-child(-n+40), body.theme-forest .cell:nth-child(8n+2):nth-child(n+41):nth-child(-n+48), body.theme-forest .cell:nth-child(8n+4):nth-child(n+41):nth-child(-n+48), body.theme-forest .cell:nth-child(8n+6):nth-child(n+41):nth-child(-n+48), body.theme-forest .cell:nth-child(8n+8):nth-child(n+41):nth-child(-n+48), body.theme-forest .cell:nth-child(8n+1):nth-child(n+49):nth-child(-n+56), body.theme-forest .cell:nth-child(8n+3):nth-child(n+49):nth-child(-n+56), body.theme-forest .cell:nth-child(8n+5):nth-child(n+49):nth-child(-n+56), body.theme-forest .cell:nth-child(8n+7):nth-child(n+49):nth-child(-n+56), body.theme-forest .cell:nth-child(8n+2):nth-child(n+57):nth-child(-n+64), body.theme-forest .cell:nth-child(8n+4):nth-child(n+57):nth-child(-n+64), body.theme-forest .cell:nth-child(8n+6):nth-child(n+57):nth-child(-n+64), body.theme-forest .cell:nth-child(8n+8):nth-child(n+57):nth-child(-n+64) { background-color: #eeeed2; }
         
+        /* Неоновая тема */
         body.theme-dark .cell { background-color: #0f1322; }
         body.theme-dark .cell:nth-child(8n+1):nth-child(-n+8), body.theme-dark .cell:nth-child(8n+3):nth-child(-n+8), body.theme-dark .cell:nth-child(8n+5):nth-child(-n+8), body.theme-dark .cell:nth-child(8n+7):nth-child(-n+8), body.theme-dark .cell:nth-child(8n+2):nth-child(n+9):nth-child(-n+16), body.theme-dark .cell:nth-child(8n+4):nth-child(n+9):nth-child(-n+16), body.theme-dark .cell:nth-child(8n+6):nth-child(n+9):nth-child(-n+16), body.theme-dark .cell:nth-child(8n+8):nth-child(n+9):nth-child(-n+16), body.theme-dark .cell:nth-child(8n+1):nth-child(n+17):nth-child(-n+24), body.theme-dark .cell:nth-child(8n+3):nth-child(n+17):nth-child(-n+24), body.theme-dark .cell:nth-child(8n+5):nth-child(n+17):nth-child(-n+24), body.theme-dark .cell:nth-child(8n+7):nth-child(n+17):nth-child(-n+24), body.theme-dark .cell:nth-child(8n+2):nth-child(n+25):nth-child(-n+32), body.theme-dark .cell:nth-child(8n+4):nth-child(n+25):nth-child(-n+32), body.theme-dark .cell:nth-child(8n+6):nth-child(n+25):nth-child(-n+32), body.theme-dark .cell:nth-child(8n+8):nth-child(n+25):nth-child(-n+32), body.theme-dark .cell:nth-child(8n+1):nth-child(n+33):nth-child(-n+40), body.theme-dark .cell:nth-child(8n+3):nth-child(n+33):nth-child(-n+40), body.theme-dark .cell:nth-child(8n+5):nth-child(n+33):nth-child(-n+40), body.theme-dark .cell:nth-child(8n+7):nth-child(n+33):nth-child(-n+40), body.theme-dark .cell:nth-child(8n+2):nth-child(n+41):nth-child(-n+48), body.theme-dark .cell:nth-child(8n+4):nth-child(n+41):nth-child(-n+48), body.theme-dark .cell:nth-child(8n+6):nth-child(n+41):nth-child(-n+48), body.theme-dark .cell:nth-child(8n+8):nth-child(n+41):nth-child(-n+48), body.theme-dark .cell:nth-child(8n+1):nth-child(n+49):nth-child(-n+56), body.theme-dark .cell:nth-child(8n+3):nth-child(n+49):nth-child(-n+56), body.theme-dark .cell:nth-child(8n+5):nth-child(n+49):nth-child(-n+56), body.theme-dark .cell:nth-child(8n+7):nth-child(n+49):nth-child(-n+56), body.theme-dark .cell:nth-child(8n+2):nth-child(n+57):nth-child(-n+64), body.theme-dark .cell:nth-child(8n+4):nth-child(n+57):nth-child(-n+64), body.theme-dark .cell:nth-child(8n+6):nth-child(n+57):nth-child(-n+64), body.theme-dark .cell:nth-child(8n+8):nth-child(n+57):nth-child(-n+64) { background-color: #1e2538; }
 
@@ -226,8 +227,9 @@
             return kIdx !== -1 && isCellAttacked(kIdx, color === 'w' ? 'b' : 'w', state);
         }
 
-        function getValidMoves(idx, state = boardState) {
-            const piece = state[idx]; if (!piece || piece.color !== currentTurn) return [];
+        // ИСПРАВЛЕНО: Валидатор теперь корректно проверяет ходы нужной стороны внутри дерева ИИ
+        function getValidMoves(idx, state = boardState, color = state[idx]?.color) {
+            const piece = state[idx]; if (!piece || piece.color !== color) return [];
             return getPseudoMoves(idx, state).filter(m => {
                 let tempState = [...state]; tempState[m.to] = tempState[idx]; tempState[idx] = null;
                 if (m.type === 'enPassant') tempState[m.to - (piece.color === 'w' ? -8 : 8)] = null;
@@ -241,7 +243,7 @@
 
         function getAllValidMoves(color, state = boardState) {
             let moves = [];
-            for (let i = 0; i < 64; i++) { if (state[i] && state[i].color === color) moves.push(...getValidMoves(i, state)); }
+            for (let i = 0; i < 64; i++) { if (state[i] && state[i].color === color) moves.push(...getValidMoves(i, state, color)); }
             return moves;
         }
         // --- ПРОФЕССИОНАЛЬНЫЙ И СТАБИЛЬНЫЙ ИИ (МИНИМАКС С АЛЬФА-БЕТА ОТСЕЧЕНИЕМ) ---
@@ -305,9 +307,9 @@
                 }
                 document.getElementById('thinking-ui').style.display = 'none';
                 executeMove(bestMove.from, bestMove.to, bestMove);
-            }, 100);
+            }, 50);
         }
-        // --- ГРАФИКА, ЧАСЫ И ОБРАБОТКА ХОДОВ ---
+        // --- ОТРИСОВКА ИГРОВОГО ЦИКЛА И КЛИКИ ---
         const boardEl = document.getElementById('chessboard');
 
         function createVisualBoard() {
@@ -370,7 +372,7 @@
             const move = validMoves.find(m => m.to === idx);
             if (move) { executeMove(selectedCell, idx, move); } 
             else if (boardState[idx] && boardState[idx].color === 'w') {
-                selectedCell = idx; validMoves = getValidMoves(idx); updateVisualBoard();
+                selectedCell = idx; validMoves = getValidMoves(idx, boardState, 'w'); updateVisualBoard();
             } else { selectedCell = null; validMoves = []; updateVisualBoard(); }
         }
 
@@ -425,7 +427,7 @@
         }
 
         function hasValidMoves(color) {
-            for (let i = 0; i < 64; i++) { if (boardState[i] && boardState[i].color === color && getValidMoves(i).length > 0) return true; } return false;
+            for (let i = 0; i < 64; i++) { if (boardState[i] && boardState[i].color === color && getValidMoves(i, boardState, color).length > 0) return true; } return false;
         }
 
         document.getElementById('modal-close-btn').addEventListener('click', closeModal);
