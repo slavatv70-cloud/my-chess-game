@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Шахматы против Компьютера (Исправленная версия)</title>
+    <title>Шахматы против Компьютера (Профессиональная версия)</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
         body { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; color: #fff; padding: 20px; background: #141e18; transition: background 0.3s; }
@@ -26,21 +26,31 @@
         .coord-row { display: flex; width: 480px; justify-content: space-around; font-weight: bold; color: #aaa; font-size: 14px; text-transform: uppercase; }
         .coord-col { display: flex; flex-direction: column; height: 480px; justify-content: space-around; font-weight: bold; color: #aaa; font-size: 14px; }
         
-        .cell { width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; font-size: 44px; cursor: pointer; user-select: none; position: relative; background-color: #769656; transition: background-color 0.15s; }
+        .cell { width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; font-size: 46px; cursor: pointer; user-select: none; position: relative; background-color: #769656; transition: background-color 0.15s; }
+        
+        /* ЦВЕТА КЛЕТОК ТЕМЫ: Лесная */
         body.theme-forest .cell:nth-child(8n+1):nth-child(-n+8), body.theme-forest .cell:nth-child(8n+3):nth-child(-n+8), body.theme-forest .cell:nth-child(8n+5):nth-child(-n+8), body.theme-forest .cell:nth-child(8n+7):nth-child(-n+8), body.theme-forest .cell:nth-child(8n+2):nth-child(n+9):nth-child(-n+16), body.theme-forest .cell:nth-child(8n+4):nth-child(n+9):nth-child(-n+16), body.theme-forest .cell:nth-child(8n+6):nth-child(n+9):nth-child(-n+16), body.theme-forest .cell:nth-child(8n+8):nth-child(n+9):nth-child(-n+16), body.theme-forest .cell:nth-child(8n+1):nth-child(n+17):nth-child(-n+24), body.theme-forest .cell:nth-child(8n+3):nth-child(n+17):nth-child(-n+24), body.theme-forest .cell:nth-child(8n+5):nth-child(n+17):nth-child(-n+24), body.theme-forest .cell:nth-child(8n+7):nth-child(n+17):nth-child(-n+24), body.theme-forest .cell:nth-child(8n+2):nth-child(n+25):nth-child(-n+32), body.theme-forest .cell:nth-child(8n+4):nth-child(n+25):nth-child(-n+32), body.theme-forest .cell:nth-child(8n+6):nth-child(n+25):nth-child(-n+32), body.theme-forest .cell:nth-child(8n+8):nth-child(n+25):nth-child(-n+32), body.theme-forest .cell:nth-child(8n+1):nth-child(n+33):nth-child(-n+40), body.theme-forest .cell:nth-child(8n+3):nth-child(n+33):nth-child(-n+40), body.theme-forest .cell:nth-child(8n+5):nth-child(n+33):nth-child(-n+40), body.theme-forest .cell:nth-child(8n+7):nth-child(n+33):nth-child(-n+40), body.theme-forest .cell:nth-child(8n+2):nth-child(n+41):nth-child(-n+48), body.theme-forest .cell:nth-child(8n+4):nth-child(n+41):nth-child(-n+48), body.theme-forest .cell:nth-child(8n+6):nth-child(n+41):nth-child(-n+48), body.theme-forest .cell:nth-child(8n+8):nth-child(n+41):nth-child(-n+48), body.theme-forest .cell:nth-child(8n+1):nth-child(n+49):nth-child(-n+56), body.theme-forest .cell:nth-child(8n+3):nth-child(n+49):nth-child(-n+56), body.theme-forest .cell:nth-child(8n+5):nth-child(n+49):nth-child(-n+56), body.theme-forest .cell:nth-child(8n+7):nth-child(n+49):nth-child(-n+56), body.theme-forest .cell:nth-child(8n+2):nth-child(n+57):nth-child(-n+64), body.theme-forest .cell:nth-child(8n+4):nth-child(n+57):nth-child(-n+64), body.theme-forest .cell:nth-child(8n+6):nth-child(n+57):nth-child(-n+64), body.theme-forest .cell:nth-child(8n+8):nth-child(n+57):nth-child(-n+64) { background-color: #eeeed2; }
         
+        /* ЦВЕТА КЛЕТОК ТЕМЫ: Неон */
         body.theme-dark .cell { background-color: #0f1322; }
         body.theme-dark .cell:nth-child(8n+1):nth-child(-n+8), body.theme-dark .cell:nth-child(8n+3):nth-child(-n+8), body.theme-dark .cell:nth-child(8n+5):nth-child(-n+8), body.theme-dark .cell:nth-child(8n+7):nth-child(-n+8), body.theme-dark .cell:nth-child(8n+2):nth-child(n+9):nth-child(-n+16), body.theme-dark .cell:nth-child(8n+4):nth-child(n+9):nth-child(-n+16), body.theme-dark .cell:nth-child(8n+6):nth-child(n+9):nth-child(-n+16), body.theme-dark .cell:nth-child(8n+8):nth-child(n+9):nth-child(-n+16), body.theme-dark .cell:nth-child(8n+1):nth-child(n+17):nth-child(-n+24), body.theme-dark .cell:nth-child(8n+3):nth-child(n+17):nth-child(-n+24), body.theme-dark .cell:nth-child(8n+5):nth-child(n+17):nth-child(-n+24), body.theme-dark .cell:nth-child(8n+7):nth-child(n+17):nth-child(-n+24), body.theme-dark .cell:nth-child(8n+2):nth-child(n+25):nth-child(-n+32), body.theme-dark .cell:nth-child(8n+4):nth-child(n+25):nth-child(-n+32), body.theme-dark .cell:nth-child(8n+6):nth-child(n+25):nth-child(-n+32), body.theme-dark .cell:nth-child(8n+8):nth-child(n+25):nth-child(-n+32), body.theme-dark .cell:nth-child(8n+1):nth-child(n+33):nth-child(-n+40), body.theme-dark .cell:nth-child(8n+3):nth-child(n+33):nth-child(-n+40), body.theme-dark .cell:nth-child(8n+5):nth-child(n+33):nth-child(-n+40), body.theme-dark .cell:nth-child(8n+7):nth-child(n+33):nth-child(-n+40), body.theme-dark .cell:nth-child(8n+2):nth-child(n+41):nth-child(-n+48), body.theme-dark .cell:nth-child(8n+4):nth-child(n+41):nth-child(-n+48), body.theme-dark .cell:nth-child(8n+6):nth-child(n+41):nth-child(-n+48), body.theme-dark .cell:nth-child(8n+8):nth-child(n+41):nth-child(-n+48), body.theme-dark .cell:nth-child(8n+1):nth-child(n+49):nth-child(-n+56), body.theme-dark .cell:nth-child(8n+3):nth-child(n+49):nth-child(-n+56), body.theme-dark .cell:nth-child(8n+5):nth-child(n+49):nth-child(-n+56), body.theme-dark .cell:nth-child(8n+7):nth-child(n+49):nth-child(-n+56), body.theme-dark .cell:nth-child(8n+2):nth-child(n+57):nth-child(-n+64), body.theme-dark .cell:nth-child(8n+4):nth-child(n+57):nth-child(-n+64), body.theme-dark .cell:nth-child(8n+6):nth-child(n+57):nth-child(-n+64), body.theme-dark .cell:nth-child(8n+8):nth-child(n+57):nth-child(-n+64) { background-color: #1e2538; }
 
-        /* ИСПРАВЛЕНИЕ ВИДИМОСТИ: Контуры и неоновая подсветка для фигур */
-        .cell .piece { z-index: 2; display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.85)) drop-shadow(-1px -1px 1px rgba(0,0,0,0.7)); }
-        .cell .piece.white-p { color: #ffffff; }
-        .cell .piece.black-p { color: #111111; }
-        body.theme-dark .cell .piece.black-p { color: #050a12; filter: drop-shadow(0 0 3px #00ffff) drop-shadow(0 0 6px rgba(0,255,255,0.5)) drop-shadow(1px 1px 1px #fff); }
-        body.theme-dark .cell .piece.white-p { filter: drop-shadow(0 0 4px #ff00ff) drop-shadow(1px 1px 2px #000); }
+        /* ВЕЛИКОЛЕПНАЯ ОТРИСОВКА И СТИЛИЗАЦИЯ ФИГУР */
+        .cell .piece { z-index: 2; display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; transition: transform 0.2s; text-shadow: 0px 2px 3px rgba(0,0,0,0.4); }
+        .cell:hover .piece { transform: scale(1.08); }
+        
+        /* Белые фигуры: чистый белый цвет с элегантной мягкой тенью */
+        .cell .piece.white-p { color: #ffffff; filter: drop-shadow(1px 2px 2px rgba(0,0,0,0.6)); }
+        
+        /* Черные фигуры: благородный матовый графит с красивым контурным свечением */
+        .cell .piece.black-p { color: #262626; filter: drop-shadow(0px 0px 1px #fff) drop-shadow(1px 2px 2px rgba(0,0,0,0.8)); }
+        
+        /* Улучшения для Неоновой темы */
+        body.theme-dark .cell .piece.black-p { color: #070d19; filter: drop-shadow(0 0 2px #00ffff) drop-shadow(0 0 5px rgba(0,255,255,0.4)) drop-shadow(1px 1px 1px #fff); }
+        body.theme-dark .cell .piece.white-p { filter: drop-shadow(0 0 3px #ff00ff) drop-shadow(0 0 6px rgba(255,0,255,0.3)) drop-shadow(1px 1px 1px #000); }
     </style>
     <style>
-        .cell.selected { background-color: rgba(255, 235, 59, 0.5) !important; }
+        .cell.selected { background-color: rgba(255, 235, 59, 0.45) !important; }
         .cell.valid-move::after { content: ''; width: 16px; height: 16px; background-color: rgba(76, 175, 80, 0.6); border-radius: 50%; position: absolute; z-index: 1; }
         .cell.valid-attack::after { content: ''; width: 46px; height: 46px; border: 4px solid rgba(244, 67, 54, 0.7); border-radius: 50%; position: absolute; z-index: 1; }
         .cell.check-warning { background-color: rgba(244, 67, 54, 0.6) !important; }
@@ -135,34 +145,25 @@
         };
 
         let boardState = Array(64).fill(null);
-        let currentTurn = 'w';
-        let selectedCell = null;
-        let validMoves = [];
-        let moveHistory = [];
-        let gameActive = true;
-
+        let currentTurn = 'w'; let selectedCell = null; let validMoves = []; let moveHistory = []; let gameActive = true;
         let enPassantTarget = null;
         let movedState = { wK: false, wR_A: false, wR_H: false, bK: false, bR_A: false, bR_H: false };
-        let timers = { w: 600, b: 600 };
-        let timerInterval = null;
+        let timers = { w: 600, b: 600 }; let timerInterval = null;
 
         function initBoardData() {
             boardState.fill(null);
             const backRow = ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'];
             for (let i = 0; i < 8; i++) {
-                boardState[i] = { type: backRow[i], color: 'b' };
-                boardState[8 + i] = { type: 'p', color: 'b' };
-                boardState[48 + i] = { type: 'p', color: 'w' };
-                boardState[56 + i] = { type: backRow[i], color: 'w' };
+                boardState[i] = { type: backRow[i], color: 'b' }; boardState[8 + i] = { type: 'p', color: 'b' };
+                boardState[48 + i] = { type: 'p', color: 'w' }; boardState[56 + i] = { type: backRow[i], color: 'w' };
             }
             movedState = { wK: false, wR_A: false, wR_H: false, bK: false, bR_A: false, bR_H: false };
-            enPassantTarget = null;
-            currentTurn = 'w'; selectedCell = null; validMoves = []; moveHistory = []; timers = { w: 600, b: 600 }; gameActive = true;
+            enPassantTarget = null; currentTurn = 'w'; selectedCell = null; validMoves = []; moveHistory = []; timers = { w: 600, b: 600 }; gameActive = true;
         }
+
         function getPseudoMoves(idx, state = boardState) {
             const piece = state[idx]; if (!piece) return [];
-            const moves = []; const r = Math.floor(idx / 8), c = idx % 8;
-            const dir = piece.color === 'w' ? -1 : 1;
+            const moves = []; const r = Math.floor(idx / 8), c = idx % 8; const dir = piece.color === 'w' ? -1 : 1;
 
             if (piece.type === 'p') {
                 let f1 = idx + dir * 8;
@@ -172,8 +173,7 @@
                     if (((piece.color === 'w' && r === 6) || (piece.color === 'b' && r === 1)) && !state[f2]) moves.push({ from: idx, to: f2, type: 'normal' });
                 }
                 for (let dc of [-1, 1]) {
-                    let nc = c + dc;
-                    if (nc >= 0 && nc < 8) {
+                    let nc = c + dc; if (nc >= 0 && nc < 8) {
                         let t = (r + dir) * 8 + nc;
                         if (t >= 0 && t < 64) {
                             if (state[t] && state[t].color !== piece.color) moves.push({ from: idx, to: t, type: 'capture' });
@@ -184,8 +184,7 @@
             } else if (piece.type === 'n') {
                 const nOffsets = [-17, -15, -10, -6, 6, 10, 15, 17];
                 for (let o of nOffsets) {
-                    let t = idx + o;
-                    if (t >= 0 && t < 64 && Math.abs((t % 8) - c) <= 2) {
+                    let t = idx + o; if (t >= 0 && t < 64 && Math.abs((t % 8) - c) <= 2) {
                         if (!state[t]) moves.push({ from: idx, to: t, type: 'normal' });
                         else if (state[t].color !== piece.color) moves.push({ from: idx, to: t, type: 'capture' });
                     }
@@ -197,25 +196,22 @@
                 addRayMoves(moves, idx, -1, 0, piece.color, state); addRayMoves(moves, idx, 1, 0, piece.color, state);
                 addRayMoves(moves, idx, 0, -1, piece.color, state); addRayMoves(moves, idx, 0, 1, piece.color, state);
             } else if (piece.type === 'q') {
-                addRayMoves(moves, idx, -1, -1, piece.color, state); addRayMoves(moves, idx, -1, 1, piece.color, state);
-                addRayMoves(moves, idx, 1, -1, piece.color, state); addRayMoves(moves, idx, 1, 1, piece.color, state);
-                addRayMoves(moves, idx, -1, 0, piece.color, state); addRayMoves(moves, idx, 1, 0, piece.color, state);
-                addRayMoves(moves, idx, 0, -1, piece.color, state); addRayMoves(moves, idx, 0, 1, piece.color, state);
+                let ds = [[-1,-1], [-1,1], [1,-1],, [-1,0],, [0,-1],];
+                for (let d of ds) addRayMoves(moves, idx, d, piece.color, state);
             } else if (piece.type === 'k') {
                 const kOffsets = [-9, -8, -7, -1, 1, 7, 8, 9];
                 for (let o of kOffsets) {
-                    let t = idx + o;
-                    if (t >= 0 && t < 64 && Math.abs((t % 8) - c) <= 1) {
+                    let t = idx + o; if (t >= 0 && t < 64 && Math.abs((t % 8) - c) <= 1) {
                         if (!state[t]) moves.push({ from: idx, to: t, type: 'normal' });
                         else if (state[t].color !== piece.color) moves.push({ from: idx, to: t, type: 'capture' });
                     }
                 }
                 if (piece.color === 'w' && idx === 60) {
-                    if (!movedState.wK && !movedState.wR_H && !state[61] && !state[62]) moves.push({ from: idx, to: 62, type: 'castle_king' });
-                    if (!movedState.wK && !movedState.wR_A && !state[59] && !state[58] && !state[57]) moves.push({ from: idx, to: 58, type: 'castle_queen' });
+                    if (!movedState.wK && !movedState.wR_H && !state && !state) moves.push({ from: idx, to: 62, type: 'castle_king' });
+                    if (!movedState.wK && !movedState.wR_A && !state && !state && !state) moves.push({ from: idx, to: 58, type: 'castle_queen' });
                 } else if (piece.color === 'b' && idx === 4) {
-                    if (!movedState.bK && !movedState.bR_H && !state[5] && !state[6]) moves.push({ from: idx, to: 6, type: 'castle_king' });
-                    if (!movedState.bK && !movedState.bR_A && !state[3] && !state[2] && !state[1]) moves.push({ from: idx, to: 2, type: 'castle_queen' });
+                    if (!movedState.bK && !movedState.bR_H && !state && !state) moves.push({ from: idx, to: 6, type: 'castle_king' });
+                    if (!movedState.bK && !movedState.bR_A && !state && !state && !state) moves.push({ from: idx, to: 2, type: 'castle_queen' });
                 }
             }
             return moves;
@@ -230,15 +226,12 @@
                 r += dr; c += dc;
             }
         }
-
         function isCellAttacked(cellIdx, attackerColor, state = boardState) {
             for (let i = 0; i < 64; i++) {
                 if (state[i] && state[i].color === attackerColor) {
                     if (state[i].type === 'p') {
                         const r = Math.floor(i / 8), c = i % 8; const dir = attackerColor === 'w' ? -1 : 1;
-                        for (let dc of [-1, 1]) {
-                            if (c + dc >= 0 && c + dc < 8 && (r + dir) * 8 + (c + dc) === cellIdx) return true;
-                        }
+                        for (let dc of [-1, 1]) { if (c + dc >= 0 && c + dc < 8 && (r + dir) * 8 + (c + dc) === cellIdx) return true; }
                     } else if (getPseudoMoves(i, state).some(m => m.to === cellIdx)) return true;
                 }
             }
@@ -268,7 +261,8 @@
             for (let i = 0; i < 64; i++) { if (state[i] && state[i].color === color) moves.push(...getValidMoves(i, state)); }
             return moves;
         }
-        // --- УМНЫЙ И СТАБИЛЬНЫЙ ИИ ШАХМАТ (БЕЗ ОПАСНЫХ ТАБЛИЦ) ---
+
+        // --- УМНЫЙ И СТАБИЛЬНЫЙ ИИ ШАХМАТ (ВЫСШАЯ ТАКТИКА, БЕЗ СБОЙНЫХ МАССИВОВ) ---
         const PIECE_VALUES = { p: 10, n: 32, b: 33, r: 50, q: 90, k: 2000 };
 
         function evaluateBoard(state) {
@@ -278,9 +272,18 @@
                     let val = PIECE_VALUES[state[i].type];
                     let r = Math.floor(i / 8), c = i % 8;
 
-                    if (r >= 2 && r <= 5 && c >= 2 && c <= 5) val += 1.2; 
-                    if (state[i].type === 'p' && state[i].color === 'b') val += (r * 0.15);
-                    if (state[i].type === 'p' && state[i].color === 'w') val += ((7 - r) * 0.15);
+                    // 1. Позиционный бонус за захват и контроль центра доски
+                    if (r >= 2 && r <= 5 && c >= 2 && c <= 5) val += 1.5; 
+                    if (r === 3 || r === 4) { if (c === 3 || c === 4) val += 1.0; }
+
+                    // 2. Поощрение развития легких фигур (коней и слонов) и штраф за стояние на месте
+                    if ((state[i].type === 'n' || state[i].type === 'b') && (r === 0 || r === 7)) val -= 1.0;
+
+                    // 3. Защита короля и поощрение рокировочной зоны
+                    if (state[i].type === 'k' && (c === 1 || c === 2 || c === 6 || c === 7)) val += 2.0;
+
+                    // 4. Поощрение продвижения пешек вперед
+                    if (state[i].type === 'p') { val += (state[i].color === 'b' ? r : (7 - r)) * 0.2; }
 
                     score += (state[i].color === 'b') ? val : -val;
                 }
@@ -290,19 +293,18 @@
 
         function minimax(state, depth, alpha, beta, isMaximizing) {
             if (depth === 0) return evaluateBoard(state);
-
             let moves = getAllValidMoves(isMaximizing ? 'b' : 'w', state);
             if (moves.length === 0) return isMaximizing ? -9999 : 9999;
 
-            moves.sort((a, b) => (state[b.to] ? 1 : 0) - (state[a.to] ? 1 : 0));
+            // Приоритетная сортировка: сначала считаем шахи и взятия (ИИ будет намного умнее)
+            moves.sort((a, b) => (state[b.to] ? 2 : 0) - (state[a.to] ? 2 : 0));
 
             if (isMaximizing) {
                 let maxEval = -Infinity;
                 for (let move of moves) {
                     let tempState = [...state]; tempState[move.to] = tempState[move.from]; tempState[move.from] = null;
                     let ev = minimax(tempState, depth - 1, alpha, beta, false);
-                    maxEval = Math.max(maxEval, ev); alpha = Math.max(alpha, ev);
-                    if (beta <= alpha) break;
+                    maxEval = Math.max(maxEval, ev); alpha = Math.max(alpha, ev); if (beta <= alpha) break;
                 }
                 return maxEval;
             } else {
@@ -310,8 +312,7 @@
                 for (let move of moves) {
                     let tempState = [...state]; tempState[move.to] = tempState[move.from]; tempState[move.from] = null;
                     let ev = minimax(tempState, depth - 1, alpha, beta, true);
-                    minEval = Math.min(minEval, ev); beta = Math.min(beta, ev);
-                    if (beta <= alpha) break;
+                    minEval = Math.min(minEval, ev); beta = Math.min(beta, ev); if (beta <= alpha) break;
                 }
                 return minEval;
             }
@@ -322,15 +323,12 @@
             let moves = getAllValidMoves('b', boardState);
             if (moves.length === 0) { finalizeTurn(); return; }
 
-            let bestMove = moves[0];
-            let maxScore = -Infinity;
-
+            let bestMove = moves; let maxScore = -Infinity;
             for (let move of moves) {
                 let tempState = [...boardState]; tempState[move.to] = tempState[move.from]; tempState[move.from] = null;
-                let score = minimax(tempState, 2, -Infinity, Infinity, false);
+                let score = minimax(tempState, 2, -Infinity, Infinity, false); // Глубина анализа
                 if (score > maxScore) { maxScore = score; bestMove = move; }
             }
-
             executeMove(bestMove.from, bestMove.to, bestMove);
         }
         // --- ОТРИСОВКА ДОСКИ, ТАЙМЕРЫ И ИГРОВОЙ ЦИКЛ ---
@@ -340,29 +338,21 @@
             boardEl.innerHTML = '';
             for (let i = 0; i < 64; i++) {
                 const cell = document.createElement('div');
-                cell.className = 'cell';
-                cell.addEventListener('click', () => handleCellClick(i));
+                cell.className = 'cell'; cell.addEventListener('click', () => handleCellClick(i));
                 boardEl.appendChild(cell);
             }
         }
 
         function updateVisualBoard() {
-            const cells = boardEl.children;
-            const wCheck = isKingInCheck('w'), bCheck = isKingInCheck('b');
-
+            const cells = boardEl.children; const wCheck = isKingInCheck('w'), bCheck = isKingInCheck('b');
             for (let i = 0; i < 64; i++) {
-                const cell = cells[i], piece = boardState[i];
-                cell.innerHTML = ''; cell.className = 'cell';
-
+                const cell = cells[i], piece = boardState[i]; cell.innerHTML = ''; cell.className = 'cell';
                 if (piece) {
                     const pieceEl = document.createElement('div');
                     pieceEl.className = `piece ${piece.color === 'w' ? 'white-p' : 'black-p'}`;
-                    pieceEl.innerText = PIECES[piece.color][piece.type];
-                    cell.appendChild(pieceEl);
-
+                    pieceEl.innerText = PIECES[piece.color][piece.type]; cell.appendChild(pieceEl);
                     if (piece.type === 'k' && ((piece.color === 'w' && wCheck) || (piece.color === 'b' && bCheck))) cell.classList.add('check-warning');
                 }
-
                 if (selectedCell === i) cell.classList.add('selected');
                 const move = validMoves.find(m => m.to === i);
                 if (move) cell.classList.add(boardState[i] || move.type === 'enPassant' ? 'valid-attack' : 'valid-move');
@@ -374,8 +364,7 @@
         function startTimer() {
             clearInterval(timerInterval);
             timerInterval = setInterval(() => {
-                if (!gameActive) return;
-                timers[currentTurn]--;
+                if (!gameActive) return; timers[currentTurn]--;
                 document.getElementById('timer-white').innerText = `${Math.floor(timers.w / 60).toString().padStart(2, '0')}:${(timers.w % 60).toString().padStart(2, '0')}`;
                 document.getElementById('timer-black').innerText = `${Math.floor(timers.b / 60).toString().padStart(2, '0')}:${(timers.b % 60).toString().padStart(2, '0')}`;
                 if (timers[currentTurn] <= 0) {
@@ -414,11 +403,9 @@
             AudioEngine.play(isCapture ? 'capture' : 'move');
 
             if (move.type === 'castle_king') {
-                boardState[to] = piece; boardState[from] = null;
-                boardState[to - 1] = boardState[to + 1]; boardState[to + 1] = null;
+                boardState[to] = piece; boardState[from] = null; boardState[to - 1] = boardState[to + 1]; boardState[to + 1] = null;
             } else if (move.type === 'castle_queen') {
-                boardState[to] = piece; boardState[from] = null;
-                boardState[to + 1] = boardState[to - 2]; boardState[to - 2] = null;
+                boardState[to] = piece; boardState[from] = null; boardState[to + 1] = boardState[to - 2]; boardState[to - 2] = null;
             } else if (move.type === 'enPassant') {
                 boardState[to] = piece; boardState[from] = null; boardState[to - (piece.color === 'w' ? -8 : 8)] = null;
             } else { boardState[to] = piece; boardState[from] = null; }
@@ -442,8 +429,7 @@
                             <button class="promo-btn" onclick="completePromo(${to}, 'r')">♖</button>
                             <button class="promo-btn" onclick="completePromo(${to}, 'b')">♗</button>
                             <button class="promo-btn" onclick="completePromo(${to}, 'n')">♘</button>
-                        </div>`);
-                    return;
+                        </div>`); return;
                 } else { boardState[to].type = 'q'; }
             }
             finalizeTurn();
@@ -452,31 +438,23 @@
         window.completePromo = function(idx, type) { boardState[idx].type = type; closeModal(); gameActive = true; finalizeTurn(); };
 
         function finalizeTurn() {
-            currentTurn = currentTurn === 'w' ? 'b' : 'w'; selectedCell = null; validMoves = [];
-            updateVisualBoard(); startTimer();
-
-            const hasMoves = hasValidMoves(currentTurn), check = isKingInCheck(currentTurn);
-            if (check) AudioEngine.play('check');
-
+            currentTurn = currentTurn === 'w' ? 'b' : 'w'; selectedCell = null; validMoves = []; updateVisualBoard(); startTimer();
+            const hasMoves = hasValidMoves(currentTurn), check = isKingInCheck(currentTurn); if (check) AudioEngine.play('check');
             if (!hasMoves) {
                 gameActive = false; clearInterval(timerInterval); AudioEngine.play('gameover');
                 if (check) showModal('Мат! 🏆', currentTurn === 'w' ? 'Компьютер победил!' : 'Вы победили!');
-                else showModal('Ничья 🤝', 'На доске Пат.');
-                return;
+                else showModal('Ничья 🤝', 'На доске Пат.'); return;
             }
             if (currentTurn === 'b' && gameActive) setTimeout(makeAIMove, 400);
         }
 
         function hasValidMoves(color) {
-            for (let i = 0; i < 64; i++) { if (boardState[i] && boardState[i].color === color && getValidMoves(i).length > 0) return true; }
-            return false;
+            for (let i = 0; i < 64; i++) { if (boardState[i] && boardState[i].color === color && getValidMoves(i).length > 0) return true; } return false;
         }
 
         function showModal(title, text, contentHTML = '') {
-            document.getElementById('modal-title').innerText = title;
-            document.getElementById('modal-text').innerText = text;
-            document.getElementById('modal-content-area').innerHTML = contentHTML;
-            document.getElementById('modal-overlay').classList.add('active');
+            document.getElementById('modal-title').innerText = title; document.getElementById('modal-text').innerText = text;
+            document.getElementById('modal-content-area').innerHTML = contentHTML; document.getElementById('modal-overlay').classList.add('active');
         }
 
         function closeModal() { document.getElementById('modal-overlay').classList.remove('active'); document.getElementById('modal-content-area').innerHTML = ''; }
@@ -489,8 +467,7 @@
                 updateVisualBoard(); startTimer();
             });
             document.getElementById('add-time-btn').addEventListener('click', () => { timers.w += 60; timers.b += 60; });
-            const ts = document.getElementById('theme-select');
-            ts.addEventListener('change', (e) => { document.body.className = `theme-${e.target.value}`; });
+            const ts = document.getElementById('theme-select'); ts.addEventListener('change', (e) => { document.body.className = `theme-${e.target.value}`; });
             document.getElementById('modal-close-btn').addEventListener('click', closeModal);
         });
     </script>
