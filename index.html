@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Продвинутые Шахматы на двоих</title>
+    <title>Шахматы против Компьютера</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
-        body { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; color: #fff; padding: 20px; transition: background 0.3s; }
+        body { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; color: #fff; padding: 20px; transition: background 0.3s; background: #141e18; }
         .controls { display: flex; gap: 15px; margin-bottom: 20px; align-items: center; flex-wrap: wrap; justify-content: center; }
         button, select { padding: 10px 15px; border: none; border-radius: 6px; background: #333; color: white; font-weight: bold; cursor: pointer; transition: all 0.2s; font-size: 14px; }
         button:hover, select:hover { background: #444; transform: translateY(-1px); }
@@ -14,9 +14,6 @@
         .board-wrapper { display: flex; flex-direction: column; align-items: center; gap: 15px; }
         .player-panel { display: flex; justify-content: space-between; width: 480px; padding: 10px 15px; background: #333; border-radius: 8px; font-size: 18px; font-weight: bold; border-left: 5px solid transparent; transition: all 0.3s; }
         .player-panel.active { border-left-color: #4caf50; background: #3d3d3d; box-shadow: 0 0 10px rgba(76, 175, 80, 0.2); }
-        .timer { font-family: monospace; font-size: 20px; color: #ffeb3b; }
-    </style>
-    <style>
         .board { display: grid; grid-template-columns: repeat(8, 60px); grid-template-rows: repeat(8, 60px); border: 4px solid #444; border-radius: 4px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
         .cell { width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; font-size: 42px; cursor: pointer; user-select: none; position: relative; transition: background-color 0.15s; }
         .cell .piece { z-index: 2; transition: transform 0.2s; display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; }
@@ -38,50 +35,32 @@
         .modal { background: #2c2c2c; padding: 25px; border-radius: 12px; text-align: center; max-width: 400px; width: 90%; border: 1px solid #444; box-shadow: 0 15px 40px rgba(0,0,0,0.5); }
         .modal h2 { margin-bottom: 15px; color: #4caf50; }
         .modal p { margin-bottom: 20px; color: #ccc; font-size: 15px; line-height: 1.4; }
-        .promo-options { display: flex; justify-content: center; gap: 15px; margin-top: 15px; }
-        .promo-btn { font-size: 40px; width: 70px; height: 70px; background: #3e3e3e; border: 2px solid #555; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
-        .promo-btn:hover { background: #505050; border-color: #4caf50; transform: scale(1.05); }
     </style>
     <style>
-        /* Лесная тема (Зеленая) */
+        /* ЦВЕТОВЫЕ ТЕМЫ ДЛЯ ДОСКИ */
         body.theme-forest { background: #141e18; }
         body.theme-forest .cell:nth-child(8n+1):nth-child(-n+8), body.theme-forest .cell:nth-child(8n+3):nth-child(-n+8), body.theme-forest .cell:nth-child(8n+5):nth-child(-n+8), body.theme-forest .cell:nth-child(8n+7):nth-child(-n+8), body.theme-forest .cell:nth-child(8n+2):nth-child(n+9):nth-child(-n+16), body.theme-forest .cell:nth-child(8n+4):nth-child(n+9):nth-child(-n+16), body.theme-forest .cell:nth-child(8n+6):nth-child(n+9):nth-child(-n+16), body.theme-forest .cell:nth-child(8n+8):nth-child(n+9):nth-child(-n+16), body.theme-forest .cell:nth-child(8n+1):nth-child(n+17):nth-child(-n+24), body.theme-forest .cell:nth-child(8n+3):nth-child(n+17):nth-child(-n+24), body.theme-forest .cell:nth-child(8n+5):nth-child(n+17):nth-child(-n+24), body.theme-forest .cell:nth-child(8n+7):nth-child(n+17):nth-child(-n+24), body.theme-forest .cell:nth-child(8n+2):nth-child(n+25):nth-child(-n+32), body.theme-forest .cell:nth-child(8n+4):nth-child(n+25):nth-child(-n+32), body.theme-forest .cell:nth-child(8n+6):nth-child(n+25):nth-child(-n+32), body.theme-forest .cell:nth-child(8n+8):nth-child(n+25):nth-child(-n+32), body.theme-forest .cell:nth-child(8n+1):nth-child(n+33):nth-child(-n+40), body.theme-forest .cell:nth-child(8n+3):nth-child(n+33):nth-child(-n+40), body.theme-forest .cell:nth-child(8n+5):nth-child(n+33):nth-child(-n+40), body.theme-forest .cell:nth-child(8n+7):nth-child(n+33):nth-child(-n+40), body.theme-forest .cell:nth-child(8n+2):nth-child(n+41):nth-child(-n+48), body.theme-forest .cell:nth-child(8n+4):nth-child(n+41):nth-child(-n+48), body.theme-forest .cell:nth-child(8n+6):nth-child(n+41):nth-child(-n+48), body.theme-forest .cell:nth-child(8n+8):nth-child(n+41):nth-child(-n+48), body.theme-forest .cell:nth-child(8n+1):nth-child(n+49):nth-child(-n+56), body.theme-forest .cell:nth-child(8n+3):nth-child(n+49):nth-child(-n+56), body.theme-forest .cell:nth-child(8n+5):nth-child(n+49):nth-child(-n+56), body.theme-forest .cell:nth-child(8n+7):nth-child(n+49):nth-child(-n+56), body.theme-forest .cell:nth-child(8n+2):nth-child(n+57):nth-child(-n+64), body.theme-forest .cell:nth-child(8n+4):nth-child(n+57):nth-child(-n+64), body.theme-forest .cell:nth-child(8n+6):nth-child(n+57):nth-child(-n+64), body.theme-forest .cell:nth-child(8n+8):nth-child(n+57):nth-child(-n+64) { background-color: #eeeed2; }
         body.theme-forest .cell { background-color: #769656; }
 
-        /* Деревянная тема (Коричневая) */
-        body.theme-wooden { background: #221a15; }
-        body.theme-wooden .cell:nth-child(8n+1):nth-child(-n+8), body.theme-wooden .cell:nth-child(8n+3):nth-child(-n+8), body.theme-wooden .cell:nth-child(8n+5):nth-child(-n+8), body.theme-wooden .cell:nth-child(8n+7):nth-child(-n+8), body.theme-wooden .cell:nth-child(8n+2):nth-child(n+9):nth-child(-n+16), body.theme-wooden .cell:nth-child(8n+4):nth-child(n+9):nth-child(-n+16), body.theme-wooden .cell:nth-child(8n+6):nth-child(n+9):nth-child(-n+16), body.theme-wooden .cell:nth-child(8n+8):nth-child(n+9):nth-child(-n+16), body.theme-wooden .cell:nth-child(8n+1):nth-child(n+17):nth-child(-n+24), body.theme-wooden .cell:nth-child(8n+3):nth-child(n+17):nth-child(-n+24), body.theme-wooden .cell:nth-child(8n+5):nth-child(n+17):nth-child(-n+24), body.theme-wooden .cell:nth-child(8n+7):nth-child(n+17):nth-child(-n+24), body.theme-wooden .cell:nth-child(8n+2):nth-child(n+25):nth-child(-n+32), body.theme-wooden .cell:nth-child(8n+4):nth-child(n+25):nth-child(-n+32), body.theme-wooden .cell:nth-child(8n+6):nth-child(n+25):nth-child(-n+32), body.theme-wooden .cell:nth-child(8n+8):nth-child(n+25):nth-child(-n+32), body.theme-wooden .cell:nth-child(8n+1):nth-child(n+33):nth-child(-n+40), body.theme-wooden .cell:nth-child(8n+3):nth-child(n+33):nth-child(-n+40), body.theme-wooden .cell:nth-child(8n+5):nth-child(n+33):nth-child(-n+40), body.theme-wooden .cell:nth-child(8n+7):nth-child(n+33):nth-child(-n+40), body.theme-wooden .cell:nth-child(8n+2):nth-child(n+41):nth-child(-n+48), body.theme-wooden .cell:nth-child(8n+4):nth-child(n+41):nth-child(-n+48), body.theme-wooden .cell:nth-child(8n+6):nth-child(n+41):nth-child(-n+48), body.theme-wooden .cell:nth-child(8n+8):nth-child(n+41):nth-child(-n+48), body.theme-wooden .cell:nth-child(8n+1):nth-child(n+49):nth-child(-n+56), body.theme-wooden .cell:nth-child(8n+3):nth-child(n+49):nth-child(-n+56), body.theme-wooden .cell:nth-child(8n+5):nth-child(n+49):nth-child(-n+56), body.theme-wooden .cell:nth-child(8n+7):nth-child(n+49):nth-child(-n+56), body.theme-wooden .cell:nth-child(8n+2):nth-child(n+57):nth-child(-n+64), body.theme-wooden .cell:nth-child(8n+4):nth-child(n+57):nth-child(-n+64), body.theme-wooden .cell:nth-child(8n+6):nth-child(n+57):nth-child(-n+64), body.theme-wooden .cell:nth-child(8n+8):nth-child(n+57):nth-child(-n+64) { background-color: #f0d9b5; }
-        body.theme-wooden .cell { background-color: #b58863; }
-
-        /* Темная тема (Неон) */
         body.theme-dark { background: #0a0f1d; }
         body.theme-dark .game-container { background: #111625; border: 1px solid #1e2942; }
         body.theme-dark .cell:nth-child(8n+1):nth-child(-n+8), body.theme-dark .cell:nth-child(8n+3):nth-child(-n+8), body.theme-dark .cell:nth-child(8n+5):nth-child(-n+8), body.theme-dark .cell:nth-child(8n+7):nth-child(-n+8), body.theme-dark .cell:nth-child(8n+2):nth-child(n+9):nth-child(-n+16), body.theme-dark .cell:nth-child(8n+4):nth-child(n+9):nth-child(-n+16), body.theme-dark .cell:nth-child(8n+6):nth-child(n+9):nth-child(-n+16), body.theme-dark .cell:nth-child(8n+8):nth-child(n+9):nth-child(-n+16), body.theme-dark .cell:nth-child(8n+1):nth-child(n+17):nth-child(-n+24), body.theme-dark .cell:nth-child(8n+3):nth-child(n+17):nth-child(-n+24), body.theme-dark .cell:nth-child(8n+5):nth-child(n+17):nth-child(-n+24), body.theme-dark .cell:nth-child(8n+7):nth-child(n+17):nth-child(-n+24), body.theme-dark .cell:nth-child(8n+2):nth-child(n+25):nth-child(-n+32), body.theme-dark .cell:nth-child(8n+4):nth-child(n+25):nth-child(-n+32), body.theme-dark .cell:nth-child(8n+6):nth-child(n+25):nth-child(-n+32), body.theme-dark .cell:nth-child(8n+8):nth-child(n+25):nth-child(-n+32), body.theme-dark .cell:nth-child(8n+1):nth-child(n+33):nth-child(-n+40), body.theme-dark .cell:nth-child(8n+3):nth-child(n+33):nth-child(-n+40), body.theme-dark .cell:nth-child(8n+5):nth-child(n+33):nth-child(-n+40), body.theme-dark .cell:nth-child(8n+7):nth-child(n+33):nth-child(-n+40), body.theme-dark .cell:nth-child(8n+2):nth-child(n+41):nth-child(-n+48), body.theme-dark .cell:nth-child(8n+4):nth-child(n+41):nth-child(-n+48), body.theme-dark .cell:nth-child(8n+6):nth-child(n+41):nth-child(-n+48), body.theme-dark .cell:nth-child(8n+8):nth-child(n+41):nth-child(-n+48), body.theme-dark .cell:nth-child(8n+1):nth-child(n+49):nth-child(-n+56), body.theme-dark .cell:nth-child(8n+3):nth-child(n+49):nth-child(-n+56), body.theme-dark .cell:nth-child(8n+5):nth-child(n+49):nth-child(-n+56), body.theme-dark .cell:nth-child(8n+7):nth-child(n+49):nth-child(-n+56), body.theme-dark .cell:nth-child(8n+2):nth-child(n+57):nth-child(-n+64), body.theme-dark .cell:nth-child(8n+4):nth-child(n+57):nth-child(-n+64), body.theme-dark .cell:nth-child(8n+6):nth-child(n+57):nth-child(-n+64), body.theme-dark .cell:nth-child(8n+8):nth-child(n+57):nth-child(-n+64) { background-color: #1e2538; }
         body.theme-dark .cell { background-color: #0f1322; }
-        body.theme-dark .cell .piece { filter: drop-shadow(0 0 4px rgba(0,180,255,0.4)); }
-        body.theme-dark .board { border-color: #2b385c; box-shadow: 0 0 20px rgba(0,140,255,0.15); }
     </style>
 </head>
-<body>
+<body class="theme-forest">
     <div class="controls">
         <button id="reset-btn">🔄 Начать заново</button>
-        <button id="add-time-btn">⏳ +1 Мин обеим</button>
         <select id="theme-select">
             <option value="forest">🌲 Лесная тема</option>
-            <option value="wooden">🧱 Деревянная тема</option>
             <option value="dark">🕶️ Темный Неон</option>
         </select>
     </div>
-
     <div class="game-container">
         <div class="board-wrapper">
-            <div class="player-panel" id="panel-black">
-                <span>Черные</span><span class="timer" id="timer-black">10:00</span>
-            </div>
+            <div class="player-panel" id="panel-black"><span>Компьютер (Черные)</span></div>
             <div class="board" id="chessboard"></div>
-            <div class="player-panel" id="panel-white">
-                <span>Белые</span><span class="timer" id="timer-white">10:00</span>
-            </div>
+            <div class="player-panel" id="panel-white"><span>Вы (Белые)</span></div>
         </div>
         <div class="sidebar">
             <div class="history-panel">
@@ -90,18 +69,15 @@
             </div>
         </div>
     </div>
-
     <div class="modal-overlay" id="modal-overlay">
         <div class="modal" id="game-modal">
             <h2 id="modal-title">Конец игры</h2>
             <p id="modal-text">Описание результата...</p>
-            <div id="modal-content-area"></div>
             <button id="modal-close-btn" style="margin-top: 15px; background: #4caf50;">Отлично</button>
         </div>
     </div>
 
     <script>
-        // --- ЗВУКОВОЙ ДВИЖОК ---
         const AudioEngine = {
             ctx: null,
             init() { if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)(); },
@@ -134,27 +110,18 @@
                 } catch(e) {}
             }
         };
-        // --- СОСТОЯНИЕ ИГРЫ И ИНИЦИАЛИЗАЦИЯ ---
+        // --- СОСТОЯНИЕ ИГРЫ И ГЕНЕРАЦИЯ ХОДОВ ---
         const PIECES = {
             w: { p: '♙', n: '♘', b: '♗', r: '♖', q: '♕', k: '♔' },
             b: { p: '♟', n: '♞', b: '♝', r: '♜', q: '♛', k: '♚' }
         };
 
         let boardState = Array(64).fill(null);
-        let currentTurn = 'w';
+        let currentTurn = 'w'; // 'w' - игрок, 'b' - ИИ
         let selectedCell = null;
         let validMoves = [];
-        let enPassantTarget = null;
         let moveHistory = [];
         let gameActive = true;
-
-        let movedState = {
-            wK: false, wR_A: false, wR_H: false,
-            bK: false, bR_A: false, bR_H: false
-        };
-
-        let timers = { w: 600, b: 600 };
-        let timerInterval = null;
 
         function initBoardData() {
             boardState.fill(null);
@@ -165,54 +132,29 @@
                 boardState[48 + i] = { type: 'p', color: 'w' };
                 boardState[56 + i] = { type: backRow[i], color: 'w' };
             }
-            movedState = { wK: false, wR_A: false, wR_H: false, bK: false, bR_A: false, bR_H: false };
-            enPassantTarget = null;
-            currentTurn = 'w';
-            moveHistory = [];
-            timers = { w: 600, b: 600 };
-            gameActive = true;
+            currentTurn = 'w'; selectedCell = null; validMoves = []; moveHistory = []; gameActive = true;
         }
 
-        function findKing(color, state = boardState) {
-            return state.findIndex(p => p && p.type === 'k' && p.color === color);
-        }
-
-        function showModal(title, text, contentHTML = '') {
-            document.getElementById('modal-title').innerText = title;
-            document.getElementById('modal-text').innerText = text;
-            document.getElementById('modal-content-area').innerHTML = contentHTML;
-            document.getElementById('modal-overlay').classList.add('active');
-        }
-
-        function closeModal() {
-            document.getElementById('modal-overlay').classList.remove('active');
-        }
-        // --- МАТЕМАТИКА И ЛОГИКА ШАХМАТНЫХ ХОДОВ ---
         function getPseudoMoves(idx, state = boardState) {
-            const piece = state[idx];
-            if (!piece) return [];
-            const moves = [];
-            const r = Math.floor(idx / 8), c = idx % 8;
+            const piece = state[idx]; if (!piece) return [];
+            const moves = []; const r = Math.floor(idx / 8), c = idx % 8;
             const dir = piece.color === 'w' ? -1 : 1;
 
             switch (piece.type) {
                 case 'p':
                     let f1 = idx + dir * 8;
                     if (f1 >= 0 && f1 < 64 && !state[f1]) {
-                        moves.push({ to: f1, type: 'normal' });
+                        moves.push({ from: idx, to: f1 });
                         let f2 = idx + dir * 16;
                         if (((piece.color === 'w' && r === 6) || (piece.color === 'b' && r === 1)) && !state[f2]) {
-                            moves.push({ to: f2, type: 'normal' });
+                            moves.push({ from: idx, to: f2 });
                         }
                     }
                     for (let dc of [-1, 1]) {
                         let nc = c + dc;
                         if (nc >= 0 && nc < 8) {
                             let t = (r + dir) * 8 + nc;
-                            if (t >= 0 && t < 64) {
-                                if (state[t] && state[t].color !== piece.color) moves.push({ to: t, type: 'capture' });
-                                if (t === enPassantTarget) moves.push({ to: t, type: 'enPassant' });
-                            }
+                            if (t >= 0 && t < 64 && state[t] && state[t].color !== piece.color) moves.push({ from: idx, to: t });
                         }
                     }
                     break;
@@ -221,42 +163,29 @@
                     for (let o of nOffsets) {
                         let t = idx + o;
                         if (t >= 0 && t < 64 && Math.abs((t % 8) - c) <= 2) {
-                            if (!state[t]) moves.push({ to: t, type: 'normal' });
-                            else if (state[t].color !== piece.color) moves.push({ to: t, type: 'capture' });
+                            if (!state[t] || state[t].color !== piece.color) moves.push({ from: idx, to: t });
                         }
                     }
                     break;
                 case 'b':
-                    addRayMoves(moves, idx, [-1, -1], piece.color, state);
-                    addRayMoves(moves, idx, [-1, 1], piece.color, state);
-                    addRayMoves(moves, idx, [1, -1], piece.color, state);
-                    addRayMoves(moves, idx, [1, 1], piece.color, state);
+                    addRayMoves(moves, idx, [-1, -1], piece.color, state); addRayMoves(moves, idx, [-1, 1], piece.color, state);
+                    addRayMoves(moves, idx, [1, -1], piece.color, state); addRayMoves(moves, idx, [1, 1], piece.color, state);
                     break;
                 case 'r':
-                    addRayMoves(moves, idx, [-1, 0], piece.color, state);
-                    addRayMoves(moves, idx, [1, 0], piece.color, state);
-                    addRayMoves(moves, idx, [0, -1], piece.color, state);
-                    addRayMoves(moves, idx, [0, 1], piece.color, state);
+                    addRayMoves(moves, idx, [-1, 0], piece.color, state); addRayMoves(moves, idx, [1, 0], piece.color, state);
+                    addRayMoves(moves, idx, [0, -1], piece.color, state); addRayMoves(moves, idx, [0, 1], piece.color, state);
                     break;
                 case 'q':
-                    const directions = [[-1,-1], [-1,1], [1,-1], [1,1], [-1,0], [1,0], [0,-1], [0,1]];
-                    for (let d of directions) addRayMoves(moves, idx, d, piece.color, state);
+                    const dirs = [[-1,-1], [-1,1], [1,-1], [1,1], [-1,0], [1,0], [0,-1], [0,1]];
+                    for (let d of dirs) addRayMoves(moves, idx, d, piece.color, state);
                     break;
                 case 'k':
                     const kOffsets = [-9, -8, -7, -1, 1, 7, 8, 9];
                     for (let o of kOffsets) {
                         let t = idx + o;
                         if (t >= 0 && t < 64 && Math.abs((t % 8) - c) <= 1) {
-                            if (!state[t]) moves.push({ to: t, type: 'normal' });
-                            else if (state[t].color !== piece.color) moves.push({ to: t, type: 'capture' });
+                            if (!state[t] || state[t].color !== piece.color) moves.push({ from: idx, to: t });
                         }
-                    }
-                    if (piece.color === 'w' && idx === 60) {
-                        if (!movedState.wK && !movedState.wR_H && !state[61] && !state[62]) moves.push({ to: 62, type: 'castle_king' });
-                        if (!movedState.wK && !movedState.wR_A && !state[59] && !state[58] && !state[57]) moves.push({ to: 58, type: 'castle_queen' });
-                    } else if (piece.color === 'b' && idx === 4) {
-                        if (!movedState.bK && !movedState.bR_H && !state[5] && !state[6]) moves.push({ to: 6, type: 'castle_king' });
-                        if (!movedState.bK && !movedState.bR_A && !state[3] && !state[2] && !state[1]) moves.push({ to: 2, type: 'castle_queen' });
                     }
                     break;
             }
@@ -267,11 +196,8 @@
             let r = Math.floor(idx / 8) + dr, c = (idx % 8) + dc;
             while (r >= 0 && r < 8 && c >= 0 && c < 8) {
                 let t = r * 8 + c;
-                if (!state[t]) moves.push({ to: t, type: 'normal' });
-                else {
-                    if (state[t].color !== color) moves.push({ to: t, type: 'capture' });
-                    break;
-                }
+                if (!state[t]) moves.push({ from: idx, to: t });
+                else { if (state[t].color !== color) moves.push({ from: idx, to: t }); break; }
                 r += dr; c += dc;
             }
         }
@@ -280,11 +206,9 @@
             for (let i = 0; i < 64; i++) {
                 if (state[i] && state[i].color === attackerColor) {
                     if (state[i].type === 'p') {
-                        const r = Math.floor(i / 8), c = i % 8;
-                        const dir = attackerColor === 'w' ? -1 : 1;
+                        const r = Math.floor(i / 8), c = i % 8; const dir = attackerColor === 'w' ? -1 : 1;
                         for (let dc of [-1, 1]) {
-                            let nc = c + dc;
-                            if (nc >= 0 && nc < 8 && (r + dir) * 8 + nc === cellIdx) return true;
+                            if (c + dc >= 0 && c + dc < 8 && (r + dir) * 8 + (c + dc) === cellIdx) return true;
                         }
                     } else if (getPseudoMoves(i, state).some(m => m.to === cellIdx)) return true;
                 }
@@ -293,25 +217,167 @@
         }
 
         function isKingInCheck(color, state = boardState) {
-            const kIdx = findKing(color, state);
+            const kIdx = state.findIndex(p => p && p.type === 'k' && p.color === color);
             return kIdx !== -1 && isCellAttacked(kIdx, color === 'w' ? 'b' : 'w', state);
         }
 
-        function getValidMoves(idx) {
-            const piece = boardState[idx];
-            if (!piece || piece.color !== currentTurn) return [];
-            return getPseudoMoves(idx).filter(m => {
-                let tempState = [...boardState];
-                tempState[m.to] = tempState[idx]; tempState[idx] = null;
-                if (m.type === 'enPassant') tempState[m.to - (piece.color === 'w' ? -8 : 8)] = null;
-                if (isKingInCheck(piece.color, tempState)) return false;
-                const enemy = piece.color === 'w' ? 'b' : 'w';
-                if (m.type === 'castle_king' && (isKingInCheck(piece.color, boardState) || isCellAttacked(idx + 1, enemy, boardState))) return false;
-                if (m.type === 'castle_queen' && (isKingInCheck(piece.color, boardState) || isCellAttacked(idx - 1, enemy, boardState))) return false;
-                return true;
+        function getValidMoves(idx, state = boardState) {
+            const piece = state[idx]; if (!piece) return [];
+            return getPseudoMoves(idx, state).filter(m => {
+                let tempState = [...state]; tempState[m.to] = tempState[idx]; tempState[idx] = null;
+                return !isKingInCheck(piece.color, tempState);
             });
         }
-        // --- ОТРИСОВКА ИНТЕРФЕЙСА, ТАЙМЕРЫ И ИГРОВОЙ ЦИКЛ ---
+
+        function getAllValidMoves(color, state = boardState) {
+            let moves = [];
+            for (let i = 0; i < 64; i++) {
+                if (state[i] && state[i].color === color) moves.push(...getValidMoves(i, state));
+            }
+            return moves;
+        }
+        // --- ШАХМАТНЫЙ ИНТЕЛЛЕКТ (ИИ КОМПЬЮТЕРА) ---
+        const PIECE_VALUES = { p: 100, n: 320, b: 330, r: 500, q: 900, k: 20000 };
+
+        // Позиционные матрицы оценки клеток (для черных фигур ИИ)
+        const PAWN_TABLE = [,
+ ,
+ ,
+ ,
+ ,
+            [5, -5,-10,  0,  0,-10, -5,  5],
+            [5, 10, 10,-20,-20, 10, 10,  5],
+            [0,  0,  0,  0,  0,  0,  0,  0]
+        ];
+
+        const KNIGHT_TABLE = [
+            [-50,-40,-30,-30,-30,-30,-40,-50],
+            [-40,-20,  0,  0,  0,  0,-20,-40],
+            [-30,  0, 10, 15, 15, 10,  0,-30],
+            [-30,  5, 15, 20, 20, 15,  5,-30],
+            [-30,  0, 15, 20, 20, 15,  0,-30],
+            [-30,  5, 10, 15, 15, 10,  5,-30],
+            [-40,-20,  0,  5,  5,  0,-20,-40],
+            [-50,-40,-30,-30,-30,-30,-40,-50]
+        ];
+
+        const BISHOP_TABLE = [
+            [-20,-10,-10,-10,-10,-10,-10,-20],
+            [-10,  0,  0,  0,  0,  0,  0,-10],
+            [-10,  0,  5, 10, 10,  5,  0,-10],
+            [-10,  5,  5, 10, 10,  5,  5,-10],
+            [-10,  0, 10, 10, 10, 10,  0,-10],
+            [-10, 10, 10, 10, 10, 10, 10,-10],
+            [-10,  5,  0,  0,  0,  0,  5,-10],
+            [-20,-10,-10,-10,-10,-10,-10,-20]
+        ];
+
+        const ROOK_TABLE = [,
+ ,
+            [-5,  0,  0,  0,  0,  0,  0, -5],
+            [-5,  0,  0,  0,  0,  0,  0, -5],
+            [-5,  0,  0,  0,  0,  0,  0, -5],
+            [-5,  0,  0,  0,  0,  0,  0, -5],
+            [-5,  0,  0,  0,  0,  0,  0, -5],
+            [0,  0,  0,  5,  5,  0,  0,  0]
+        ];
+
+        const QUEEN_TABLE = [
+            [-20,-10,-10, -5, -5,-10,-10,-20],
+            [-10,  0,  0,  0,  0,  0,  0,-10],
+            [-10,  0,  5,  5,  5,  5,  0,-10],
+            [-5,  0,  5,  5,  5,  5,  0, -5],
+            [0,  0,  5,  5,  5,  5,  0, -5],
+            [-10,  5,  5,  5,  5,  5,  0,-10],
+            [-10,  0,  5,  0,  0,  0,  0,-10],
+            [-20,-10,-10, -5, -5,-10,-10,-20]
+        ];
+
+        const KING_TABLE = [
+            [-30,-40,-40,-50,-50,-40,-40,-30],
+            [-30,-40,-40,-50,-50,-40,-40,-30],
+            [-30,-40,-40,-50,-50,-40,-40,-30],
+            [-30,-40,-40,-50,-50,-40,-40,-30],
+            [-20,-30,-30,-40,-40,-30,-30,-20],
+            [-10,-20,-20,-20,-20,-20,-20,-10],
+,
+            [20, 30, 10,  0,  0, 10, 30, 20]
+        ];
+
+        function evaluateBoard(state) {
+            let totalEvaluation = 0;
+            for (let i = 0; i < 64; i++) {
+                if (state[i]) {
+                    totalEvaluation += getPieceValue(state[i], i);
+                }
+            }
+            return totalEvaluation;
+        }
+
+        function getPieceValue(piece, index) {
+            let r = Math.floor(index / 8);
+            let c = index % 8;
+            
+            // Если фигура белая (игрок), инвертируем координаты строки для правильной оценки матриц
+            let tableRow = piece.color === 'b' ? r : 7 - r;
+            let value = PIECE_VALUES[piece.type];
+
+            if (piece.type === 'p') value += PAWN_TABLE[tableRow][c];
+            else if (piece.type === 'n') value += KNIGHT_TABLE[tableRow][c];
+            else if (piece.type === 'b') value += BISHOP_TABLE[tableRow][c];
+            else if (piece.type === 'r') value += ROOK_TABLE[tableRow][c];
+            else if (piece.type === 'q') value += QUEEN_TABLE[tableRow][c];
+            else if (piece.type === 'k') value += KING_TABLE[tableRow][c];
+
+            return piece.color === 'b' ? value : -value;
+        }
+
+        // Алгоритм Минимакс с альфа-бета отсечением (глубина 2 хода для высокой скорости в браузере)
+        function minimax(state, depth, alpha, beta, isMaximizing) {
+            if (depth === 0) return [evaluateBoard(state), null];
+
+            let moves = getAllValidMoves(isMaximizing ? 'b' : 'w', state);
+            if (moves.length === 0) return [isMaximizing ? -15000 : 15000, null];
+
+            // Простая сортировка ходов (сначала взятия) для ускорения альфа-бета отсечения
+            moves.sort((a, b) => (state[b.to] ? 1 : 0) - (state[a.to] ? 1 : 0));
+
+            let bestMove = null;
+
+            if (isMaximizing) {
+                let maxEval = -Infinity;
+                for (let move of moves) {
+                    let tempState = [...state];
+                    tempState[move.to] = tempState[move.from]; tempState[move.from] = null;
+                    let evaluation = minimax(tempState, depth - 1, alpha, beta, false)[0];
+                    if (evaluation > maxEval) { maxEval = evaluation; bestMove = move; }
+                    alpha = Math.max(alpha, evaluation);
+                    if (beta <= alpha) break;
+                }
+                return [maxEval, bestMove];
+            } else {
+                let minEval = Infinity;
+                for (let move of moves) {
+                    let tempState = [...state];
+                    tempState[move.to] = tempState[move.from]; tempState[move.from] = null;
+                    let evaluation = minimax(tempState, depth - 1, alpha, beta, true)[0];
+                    if (evaluation < minEval) { minEval = evaluation; bestMove = move; }
+                    beta = Math.min(beta, evaluation);
+                    if (beta <= alpha) break;
+                }
+                return [minEval, bestMove];
+            }
+        }
+
+        function makeAIMove() {
+            if (!gameActive) return;
+            // Глубина поиска = 2 полухода (этого достаточно для мгновенного и разумного ответа компьютера)
+            let [_, bestMove] = minimax(boardState, 2, -Infinity, Infinity, true);
+            if (bestMove) {
+                executeMove(bestMove.from, bestMove.to);
+            }
+        }
+        // --- ОТРИСОВКА, ИНТЕРФЕЙС И ОБРАБОТКА ХОДОВ ---
         const boardEl = document.getElementById('chessboard');
 
         function createVisualBoard() {
@@ -346,37 +412,17 @@
 
                 if (selectedCell === i) cell.classList.add('selected');
                 const move = validMoves.find(m => m.to === i);
-                if (move) cell.classList.add(move.type === 'capture' || move.type === 'enPassant' || boardState[i] ? 'valid-attack' : 'valid-move');
+                if (move) cell.classList.add(boardState[i] ? 'valid-attack' : 'valid-move');
             }
             document.getElementById('panel-white').classList.toggle('active', currentTurn === 'w');
             document.getElementById('panel-black').classList.toggle('active', currentTurn === 'b');
-        }
-
-        function formatTime(sec) {
-            return `${Math.floor(sec / 60).toString().padStart(2, '0')}:${(sec % 60).toString().padStart(2, '0')}`;
-        }
-
-        function updateTimersDisplay() {
-            document.getElementById('timer-white').innerText = formatTime(timers.w);
-            document.getElementById('timer-black').innerText = formatTime(timers.b);
-        }
-
-        function startTimer() {
-            clearInterval(timerInterval);
-            timerInterval = setInterval(() => {
-                if (!gameActive) return;
-                timers[currentTurn]--; updateTimersDisplay();
-                if (timers[currentTurn] <= 0) {
-                    clearInterval(timerInterval); gameActive = false; AudioEngine.play('gameover');
-                    showModal('Время истекло ⏳', `${currentTurn === 'w' ? 'Черные' : 'Белые'} победили по времени!`);
-                }
-            }, 1000);
         }
 
         function logMove(from, to, piece, isCapture) {
             const files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'], ranks = ['8', '7', '6', '5', '4', '3', '2', '1'];
             const notation = piece.type.toUpperCase() + files[from % 8] + ranks[Math.floor(from / 8)] + (isCapture ? 'x' : '-') + files[to % 8] + ranks[Math.floor(to / 8)];
             const logEl = document.getElementById('moves-log');
+            
             if (piece.color === 'w') {
                 const row = document.createElement('div'); row.className = 'moves-row';
                 row.innerHTML = `<span class="move-num">${Math.floor(moveHistory.length / 2) + 1}.</span><span>${notation}</span><span id="black-move-slot"></span>`;
@@ -389,63 +435,49 @@
         }
 
         function handleCellClick(idx) {
-            if (!gameActive) return;
+            if (!gameActive || currentTurn === 'b') return; // Ход ИИ кликать нельзя
             AudioEngine.init();
             const move = validMoves.find(m => m.to === idx);
-            if (move) { executeMove(selectedCell, move); } 
-            else if (boardState[idx] && boardState[idx].color === currentTurn) {
+            if (move) { executeMove(selectedCell, idx); } 
+            else if (boardState[idx] && boardState[idx].color === 'w') {
                 selectedCell = idx; validMoves = getValidMoves(idx); updateVisualBoard();
             } else { selectedCell = null; validMoves = []; updateVisualBoard(); }
         }
 
-        function executeMove(from, move) {
-            const piece = boardState[from], isCapture = boardState[move.to] !== null || move.type === 'enPassant';
+        function executeMove(from, to) {
+            const piece = boardState[from], isCapture = boardState[to] !== null;
             AudioEngine.play(isCapture ? 'capture' : 'move');
 
-            if (move.type === 'castle_king') {
-                boardState[move.to] = piece; boardState[from] = null;
-                boardState[move.to - 1] = boardState[move.to + 1]; boardState[move.to + 1] = null;
-            } else if (move.type === 'castle_queen') {
-                boardState[move.to] = piece; boardState[from] = null;
-                boardState[move.to + 1] = boardState[move.to - 2]; boardState[move.to - 2] = null;
-            } else if (move.type === 'enPassant') {
-                boardState[move.to] = piece; boardState[from] = null; boardState[move.to - (piece.color === 'w' ? -8 : 8)] = null;
-            } else { boardState[move.to] = piece; boardState[from] = null; }
+            boardState[to] = piece; boardState[from] = null;
+            logMove(from, to, piece, isCapture);
 
-            logMove(from, move.to, piece, isCapture);
-            if (piece.type === 'k') movedState[`${piece.color}K`] = true;
-            if (piece.type === 'r') {
-                if (from === 56) movedState.wR_A = true; if (from === 63) movedState.wR_H = true;
-                if (from === 0) movedState.bR_A = true; if (from === 7) movedState.bR_H = true;
+            // Автоматическое превращение пешки на последней линии
+            const targetRank = Math.floor(to / 8);
+            if (piece.type === 'p' && (targetRank === 0 || targetRank === 7)) {
+                boardState[to].type = 'q'; // Превращаем в ферзя
             }
-            enPassantTarget = (piece.type === 'p' && Math.abs(Math.floor(move.to / 8) - Math.floor(from / 8)) === 2) ? (from + move.to) / 2 : null;
 
-            if (piece.type === 'p' && (Math.floor(move.to / 8) === 0 || Math.floor(move.to / 8) === 7)) {
-                gameActive = false; const opts = piece.color === 'w' ? PIECES.w : PIECES.b;
-                showModal('Превращение пешки 👑', 'Выберите фигуру:', `
-                    <div class="promo-options">
-                        <button class="promo-btn" onclick="completePromotion(${move.to}, 'q')">${opts.q}</button>
-                        <button class="promo-btn" onclick="completePromotion(${move.to}, 'r')">${opts.r}</button>
-                        <button class="promo-btn" onclick="completePromotion(${move.to}, 'b')">${opts.b}</button>
-                        <button class="promo-btn" onclick="completePromotion(${move.to}, 'n')">${opts.n}</button>
-                    </div>`);
-                return;
-            }
             finalizeTurn();
         }
 
-        window.completePromotion = function(idx, type) { boardState[idx].type = type; closeModal(); gameActive = true; finalizeTurn(); };
-
         function finalizeTurn() {
             currentTurn = currentTurn === 'w' ? 'b' : 'w'; selectedCell = null; validMoves = [];
+            updateVisualBoard();
+
             const hasMoves = hasValidMoves(currentTurn), check = isKingInCheck(currentTurn);
             if (check) AudioEngine.play('check');
+
             if (!hasMoves) {
-                gameActive = false; clearInterval(timerInterval); AudioEngine.play('gameover');
-                if (check) { showModal('Мат! 🏆', `Игра завершена. Победили ${currentTurn === 'w' ? 'Черные' : 'Белые'}!`); } 
+                gameActive = false; AudioEngine.play('gameover');
+                if (check) { showModal('Мат! 🏆', currentTurn === 'w' ? 'Компьютер победил!' : 'Вы победили Компьютер!'); } 
                 else { showModal('Ничья 🤝', 'На доске зафиксирован Пат.'); }
+                return;
             }
-            updateVisualBoard(); startTimer();
+
+            // Если настал ход Компьютера (Черных), запускаем его ИИ с небольшой задержкой (для реалистичности)
+            if (currentTurn === 'b' && gameActive) {
+                setTimeout(makeAIMove, 250);
+            }
         }
 
         function hasValidMoves(color) {
@@ -453,19 +485,24 @@
             return false;
         }
 
+        function showModal(title, text) {
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-text').innerText = text;
+            document.getElementById('modal-overlay').classList.add('active');
+        }
+
+        function closeModal() { document.getElementById('modal-overlay').classList.remove('active'); }
+
         function initControls() {
             document.getElementById('reset-btn').addEventListener('click', () => {
-                clearInterval(timerInterval); initBoardData(); document.getElementById('moves-log').innerHTML = '';
-                updateVisualBoard(); updateTimersDisplay(); startTimer();
+                initBoardData(); document.getElementById('moves-log').innerHTML = ''; updateVisualBoard();
             });
-            document.getElementById('add-time-btn').addEventListener('click', () => { timers.w += 60; timers.b += 60; updateTimersDisplay(); });
             const ts = document.getElementById('theme-select');
             ts.addEventListener('change', (e) => { document.body.className = `theme-${e.target.value}`; });
-            document.body.className = `theme-${ts.value}`;
             document.getElementById('modal-close-btn').addEventListener('click', closeModal);
         }
 
-        window.addEventListener('DOMContentLoaded', () => { createVisualBoard(); initBoardData(); initControls(); updateVisualBoard(); updateTimersDisplay(); startTimer(); });
+        window.addEventListener('DOMContentLoaded', () => { createVisualBoard(); initBoardData(); initControls(); updateVisualBoard(); });
     </script>
 </body>
 </html>
