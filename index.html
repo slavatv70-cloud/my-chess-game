@@ -48,7 +48,6 @@
     </style>
 </head>
 <body class="theme-forest">
-
     <div class="controls">
         <button id="reset-btn">🔄 Начать заново</button>
         <select id="theme-select">
@@ -56,7 +55,6 @@
             <option value="dark">🕶️ Темный Неон</option>
         </select>
     </div>
-
     <div class="game-container">
         <div class="board-wrapper">
             <div class="player-panel" id="panel-black"><span>Компьютер (Черные)</span></div>
@@ -71,7 +69,6 @@
         </div>
         <div class="developer-credits">Разработчик: Тищенко Вячеслав Владимирович</div>
     </div>
-
     <div class="modal-overlay" id="modal-overlay">
         <div class="modal" id="game-modal">
             <h2 id="modal-title">Конец игры</h2>
@@ -228,30 +225,8 @@
             for (let i = 0; i < 64; i++) { if (state[i] && state[i].color === color) moves.push(...getValidMoves(i, state)); }
             return moves;
         }
-        // --- УМНЫЙ ШАХМАТНЫЙ ИИ (ГЛУБОКИЙ МИНИМАКС + ПОЗИЦИОННЫЕ МАТРИЦЫ) ---
+        // --- СТАБИЛЬНЫЙ И УМНЫЙ ИИ ДЛЯ КОМПЬЮТЕРА (БЕЗ ОПАСНЫХ ТАБЛИЦ) ---
         const PIECE_VALUES = { p: 10, n: 32, b: 33, r: 50, q: 90, k: 2000 };
-
-        const PAWN_TABLE = [
-            [ 0,  0,  0,  0,  0,  0,  0,  0],
-            [ 5, 10, 10,-20,-20, 10, 10,  5],
-            [ 5, -5,-10,  0,  0,-10, -5,  5],
-            [ 0,  0,  0, 20, 20,  0,  0,  0],
-            [ 5,  5, 10, 25, 25, 10,  5,  5],
-,
- ,
-            [ 0,  0,  0,  0,  0,  0,  0,  0]
-        ];
-
-        const KNIGHT_TABLE = [
-            [-5,-4,-3,-3,-3,-3,-4,-5],
-            [-4,-2, 0, 0, 0, 0,-2,-4],
-            [-3, 0, 1, 1.5, 1.5, 1, 0,-3],
-            [-3, 0.5, 1.5, 2, 2, 1.5, 0.5,-3],
-            [-3, 0, 1.5, 2, 2, 1.5, 0,-3],
-            [-3, 0.5, 1, 1.5, 1.5, 1, 0.5,-3],
-            [-4,-2, 0, 0, 0, 0,-2,-4],
-            [-5,-4,-3,-3,-3,-3,-4,-5]
-        ];
 
         function evaluateBoard(state) {
             let score = 0;
@@ -259,10 +234,13 @@
                 if (state[i]) {
                     let val = PIECE_VALUES[state[i].type];
                     let r = Math.floor(i / 8), c = i % 8;
-                    let tableRow = state[i].color === 'b' ? r : 7 - r;
 
-                    if (state[i].type === 'p') val += PAWN_TABLE[tableRow][c] / 10;
-                    if (state[i].type === 'n') val += KNIGHT_TABLE[tableRow][c] / 10;
+                    // Умный позиционный бонус: поощряем занятие фигурами центра поля
+                    if (r >= 2 && r <= 5 && c >= 2 && c <= 5) val += 1.5; 
+                    // Бонус за продвижение пешек черных (ИИ) вперед
+                    if (state[i].type === 'p' && state[i].color === 'b') val += (r * 0.2);
+                    // Бонус за продвижение пешек белых (Игрока) вверх
+                    if (state[i].type === 'p' && state[i].color === 'w') val += ((7 - r) * 0.2);
 
                     score += (state[i].color === 'b') ? val : -val;
                 }
@@ -276,6 +254,7 @@
             let moves = getAllValidMoves(isMaximizing ? 'b' : 'w', state);
             if (moves.length === 0) return isMaximizing ? -9999 : 9999;
 
+            // Сортировка для молниеносной работы альфа-бета отсечения
             moves.sort((a, b) => (state[b.to] ? 1 : 0) - (state[a.to] ? 1 : 0));
 
             if (isMaximizing) {
@@ -315,7 +294,7 @@
 
             executeMove(bestMove.from, bestMove.to);
         }
-        // --- ИНТЕРФЕЙС И ЦИКЛ ХОДОВ ---
+        // --- ОТРИСОВКА, ИГРОВОЙ ЦИКЛ И КЛИКИ МЫШИ ---
         const boardEl = document.getElementById('chessboard');
 
         function createVisualBoard() {
