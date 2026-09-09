@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Шахматы против Компьютера (Исправленный Многопоточный ИИ)</title>
+    <title>Шахматы против Компьютера (Стабильная версия)</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
         body { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; color: #fff; padding: 20px; background: #141e18; transition: background 0.3s; }
@@ -31,11 +31,10 @@
         /* Лесная тема клеток */
         body.theme-forest .cell:nth-child(8n+1):nth-child(-n+8), body.theme-forest .cell:nth-child(8n+3):nth-child(-n+8), body.theme-forest .cell:nth-child(8n+5):nth-child(-n+8), body.theme-forest .cell:nth-child(8n+7):nth-child(-n+8), body.theme-forest .cell:nth-child(8n+2):nth-child(n+9):nth-child(-n+16), body.theme-forest .cell:nth-child(8n+4):nth-child(n+9):nth-child(-n+16), body.theme-forest .cell:nth-child(8n+6):nth-child(n+9):nth-child(-n+16), body.theme-forest .cell:nth-child(8n+8):nth-child(n+9):nth-child(-n+16), body.theme-forest .cell:nth-child(8n+1):nth-child(n+17):nth-child(-n+24), body.theme-forest .cell:nth-child(8n+3):nth-child(n+17):nth-child(-n+24), body.theme-forest .cell:nth-child(8n+5):nth-child(n+17):nth-child(-n+24), body.theme-forest .cell:nth-child(8n+7):nth-child(n+17):nth-child(-n+24), body.theme-forest .cell:nth-child(8n+2):nth-child(n+25):nth-child(-n+32), body.theme-forest .cell:nth-child(8n+4):nth-child(n+25):nth-child(-n+32), body.theme-forest .cell:nth-child(8n+6):nth-child(n+25):nth-child(-n+32), body.theme-forest .cell:nth-child(8n+8):nth-child(n+25):nth-child(-n+32), body.theme-forest .cell:nth-child(8n+1):nth-child(n+33):nth-child(-n+40), body.theme-forest .cell:nth-child(8n+3):nth-child(n+33):nth-child(-n+40), body.theme-forest .cell:nth-child(8n+5):nth-child(n+33):nth-child(-n+40), body.theme-forest .cell:nth-child(8n+7):nth-child(n+33):nth-child(-n+40), body.theme-forest .cell:nth-child(8n+2):nth-child(n+41):nth-child(-n+48), body.theme-forest .cell:nth-child(8n+4):nth-child(n+41):nth-child(-n+48), body.theme-forest .cell:nth-child(8n+6):nth-child(n+41):nth-child(-n+48), body.theme-forest .cell:nth-child(8n+8):nth-child(n+41):nth-child(-n+48), body.theme-forest .cell:nth-child(8n+1):nth-child(n+49):nth-child(-n+56), body.theme-forest .cell:nth-child(8n+3):nth-child(n+49):nth-child(-n+56), body.theme-forest .cell:nth-child(8n+5):nth-child(n+49):nth-child(-n+56), body.theme-forest .cell:nth-child(8n+7):nth-child(n+49):nth-child(-n+56), body.theme-forest .cell:nth-child(8n+2):nth-child(n+57):nth-child(-n+64), body.theme-forest .cell:nth-child(8n+4):nth-child(n+57):nth-child(-n+64), body.theme-forest .cell:nth-child(8n+6):nth-child(n+57):nth-child(-n+64), body.theme-forest .cell:nth-child(8n+8):nth-child(n+57):nth-child(-n+64) { background-color: #eeeed2; }
         
-        /* Неоновая тема */
         body.theme-dark .cell { background-color: #0f1322; }
         body.theme-dark .cell:nth-child(8n+1):nth-child(-n+8), body.theme-dark .cell:nth-child(8n+3):nth-child(-n+8), body.theme-dark .cell:nth-child(8n+5):nth-child(-n+8), body.theme-dark .cell:nth-child(8n+7):nth-child(-n+8), body.theme-dark .cell:nth-child(8n+2):nth-child(n+9):nth-child(-n+16), body.theme-dark .cell:nth-child(8n+4):nth-child(n+9):nth-child(-n+16), body.theme-dark .cell:nth-child(8n+6):nth-child(n+9):nth-child(-n+16), body.theme-dark .cell:nth-child(8n+8):nth-child(n+9):nth-child(-n+16), body.theme-dark .cell:nth-child(8n+1):nth-child(n+17):nth-child(-n+24), body.theme-dark .cell:nth-child(8n+3):nth-child(n+17):nth-child(-n+24), body.theme-dark .cell:nth-child(8n+5):nth-child(n+17):nth-child(-n+24), body.theme-dark .cell:nth-child(8n+7):nth-child(n+17):nth-child(-n+24), body.theme-dark .cell:nth-child(8n+2):nth-child(n+25):nth-child(-n+32), body.theme-dark .cell:nth-child(8n+4):nth-child(n+25):nth-child(-n+32), body.theme-dark .cell:nth-child(8n+6):nth-child(n+25):nth-child(-n+32), body.theme-dark .cell:nth-child(8n+8):nth-child(n+25):nth-child(-n+32), body.theme-dark .cell:nth-child(8n+1):nth-child(n+33):nth-child(-n+40), body.theme-dark .cell:nth-child(8n+3):nth-child(n+33):nth-child(-n+40), body.theme-dark .cell:nth-child(8n+5):nth-child(n+33):nth-child(-n+40), body.theme-dark .cell:nth-child(8n+7):nth-child(n+33):nth-child(-n+40), body.theme-dark .cell:nth-child(8n+2):nth-child(n+41):nth-child(-n+48), body.theme-dark .cell:nth-child(8n+4):nth-child(n+41):nth-child(-n+48), body.theme-dark .cell:nth-child(8n+6):nth-child(n+41):nth-child(-n+48), body.theme-dark .cell:nth-child(8n+8):nth-child(n+41):nth-child(-n+48), body.theme-dark .cell:nth-child(8n+1):nth-child(n+49):nth-child(-n+56), body.theme-dark .cell:nth-child(8n+3):nth-child(n+49):nth-child(-n+56), body.theme-dark .cell:nth-child(8n+5):nth-child(n+49):nth-child(-n+56), body.theme-dark .cell:nth-child(8n+7):nth-child(n+49):nth-child(-n+56), body.theme-dark .cell:nth-child(8n+2):nth-child(n+57):nth-child(-n+64), body.theme-dark .cell:nth-child(8n+4):nth-child(n+57):nth-child(-n+64), body.theme-dark .cell:nth-child(8n+6):nth-child(n+57):nth-child(-n+64), body.theme-dark .cell:nth-child(8n+8):nth-child(n+57):nth-child(-n+64) { background-color: #1e2538; }
 
-        /* ОТРИСОВКА ВЕКТОРНЫХ ФИГУР */
+        /* ОТРИСОВКА КРАСИВЫХ ВЕКТОРНЫХ ФИГУР */
         .cell .piece { z-index: 2; display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; text-shadow: 0px 2px 3px rgba(0,0,0,0.4); }
         .cell .piece.white-p { color: #ffffff; filter: drop-shadow(1px 2px 2px rgba(0,0,0,0.6)); }
         .cell .piece.black-p { color: #232326; filter: drop-shadow(0px 0px 1px #fff) drop-shadow(1px 2px 2px rgba(0,0,0,0.8)); }
@@ -75,7 +74,7 @@
         <div class="board-wrapper">
             <div class="player-panel" id="panel-black"><span>Компьютер (Черные)</span><span class="timer" id="timer-black">10:00</span></div>
             <div class="board-grid-container">
-                <div class="ai-thinking-overlay" id="thinking-ui">🤖 Просчёт ходов (Глубина 4)...</div>
+                <div class="ai-thinking-overlay" id="thinking-ui">🤖 Компьютер думает...</div>
                 <div class="coord-row" style="grid-column: 2; grid-row: 1;"><span>a</span><span>b</span><span>c</span><span>d</span><span>e</span><span>f</span><span>g</span><span>h</span></div>
                 <div class="coord-col" style="grid-column: 1; grid-row: 2;"><span>8</span><span>7</span><span>6</span><span>5</span><span>4</span><span>3</span><span>2</span><span>1</span></div>
                 <div class="board" id="chessboard"></div>
@@ -172,15 +171,12 @@
                     }
                 }
             } else if (piece.type === 'b') {
-                // Диагонали
                 addRayMoves(moves, idx, -1, -1, piece.color, state); addRayMoves(moves, idx, -1, 1, piece.color, state);
                 addRayMoves(moves, idx, 1, -1, piece.color, state); addRayMoves(moves, idx, 1, 1, piece.color, state);
             } else if (piece.type === 'r') {
-                // Прямые линии
                 addRayMoves(moves, idx, -1, 0, piece.color, state); addRayMoves(moves, idx, 1, 0, piece.color, state);
                 addRayMoves(moves, idx, 0, -1, piece.color, state); addRayMoves(moves, idx, 0, 1, piece.color, state);
             } else if (piece.type === 'q') {
-                // Ферзь ходит во все 8 сторон света
                 addRayMoves(moves, idx, -1, -1, piece.color, state); addRayMoves(moves, idx, -1, 1, piece.color, state);
                 addRayMoves(moves, idx, 1, -1, piece.color, state); addRayMoves(moves, idx, 1, 1, piece.color, state);
                 addRayMoves(moves, idx, -1, 0, piece.color, state); addRayMoves(moves, idx, 1, 0, piece.color, state);
@@ -213,7 +209,6 @@
                 r += dr; c += dc;
             }
         }
-
         function isCellAttacked(cellIdx, attackerColor, state = boardState) {
             for (let i = 0; i < 64; i++) {
                 if (state[i] && state[i].color === attackerColor) {
@@ -249,102 +244,70 @@
             for (let i = 0; i < 64; i++) { if (state[i] && state[i].color === color) moves.push(...getValidMoves(i, state)); }
             return moves;
         }
-        // --- МНОГОПОТОЧНЫЙ ШАХМАТНЫЙ ИИ (ГЛУБИНА 4) БЕЗ ЗАВИСАНИЯ СТРАНИЦЫ ---
-        const workerCode = `
-            const PIECE_VALUES = { p: 10, n: 32, b: 33, r: 50, q: 90, k: 2000 };
+        // --- ПРОФЕССИОНАЛЬНЫЙ И СТАБИЛЬНЫЙ ИИ (МИНИМАКС С АЛЬФА-БЕТА ОТСЕЧЕНИЕМ) ---
+        const PIECE_VALUES = { p: 10, n: 32, b: 33, r: 50, q: 90, k: 2000 };
 
-            function evaluateBoard(state) {
-                let score = 0;
-                for (let i = 0; i < 64; i++) {
-                    if (state[i]) {
-                        let val = PIECE_VALUES[state[i].type]; let r = Math.floor(i / 8), c = i % 8;
-                        if (r >= 2 && r <= 5 && c >= 2 && c <= 5) val += 1.5; 
-                        if (r === 3 || r === 4) { if (c === 3 || c === 4) val += 1.0; }
-                        if ((state[i].type === 'n' || state[i].type === 'b') && (r === 0 || r === 7)) val -= 1.0;
-                        if (state[i].type === 'k' && (c === 1 || c === 2 || c === 6 || c === 7)) val += 2.0;
-                        if (state[i].type === 'p') { val += (state[i].color === 'b' ? r : (7 - r)) * 0.2; }
-                        score += (state[i].color === 'b') ? val : -val;
-                    }
+        function evaluateBoard(state) {
+            let score = 0;
+            for (let i = 0; i < 64; i++) {
+                if (state[i]) {
+                    let val = PIECE_VALUES[state[i].type]; let r = Math.floor(i / 8), c = i % 8;
+                    if (r >= 2 && r <= 5 && c >= 2 && c <= 5) val += 1.5; 
+                    if (r === 3 || r === 4) { if (c === 3 || c === 4) val += 1.0; }
+                    if ((state[i].type === 'n' || state[i].type === 'b') && (r === 0 || r === 7)) val -= 1.0;
+                    if (state[i].type === 'k' && (c === 1 || c === 2 || c === 6 || c === 7)) val += 2.0;
+                    if (state[i].type === 'p') { val += (state[i].color === 'b' ? r : (7 - r)) * 0.2; }
+                    score += (state[i].color === 'b') ? val : -val;
                 }
-                return score;
             }
+            return score;
+        }
 
-            // Инъекция функций внутрь фонового потока воркера
-            \${getPseudoMoves.toString()}
-            \${addRayMoves.toString()}
-            \${isCellAttacked.toString()}
-            \${isKingInCheck.toString()}
+        function minimax(state, depth, alpha, beta, isMaximizing) {
+            if (depth === 0) return evaluateBoard(state);
+            let moves = getAllValidMoves(isMaximizing ? 'b' : 'w', state);
+            if (moves.length === 0) return isMaximizing ? -9999 : 9999;
             
-            function getValidMovesWorker(idx, state, currentTurn) {
-                const piece = state[idx]; if (!piece || piece.color !== currentTurn) return [];
-                return getPseudoMoves(idx, state).filter(m => {
-                    let tempState = [...state]; tempState[m.to] = tempState[idx]; tempState[idx] = null;
-                    if (isKingInCheck(piece.color, tempState)) return false;
-                    return true;
-                });
-            }
+            moves.sort((a, b) => (state[b.to] ? 2 : 0) - (state[a.to] ? 2 : 0));
 
-            function getAllValidMovesWorker(color, state) {
-                let moves = [];
-                for (let i = 0; i < 64; i++) { if (state[i] && state[i].color === color) moves.push(...getValidMovesWorker(i, state, color)); }
-                return moves;
-            }
-
-            function minimax(state, depth, alpha, beta, isMaximizing) {
-                if (depth === 0) return evaluateBoard(state);
-                let moves = getAllValidMovesWorker(isMaximizing ? 'b' : 'w', state);
-                if (moves.length === 0) return isMaximizing ? -9999 : 9999;
-                moves.sort((a, b) => (state[b.to] ? 2 : 0) - (state[a.to] ? 2 : 0));
-
-                if (isMaximizing) {
-                    let maxEval = -Infinity;
-                    for (let move of moves) {
-                        let tempState = [...state]; tempState[move.to] = tempState[move.from]; tempState[move.from] = null;
-                        let ev = minimax(tempState, depth - 1, alpha, beta, false);
-                        maxEval = Math.max(maxEval, ev); alpha = Math.max(alpha, ev); if (beta <= alpha) break;
-                    }
-                    return maxEval;
-                } else {
-                    let minEval = Infinity;
-                    for (let move of moves) {
-                        let tempState = [...state]; tempState[move.to] = tempState[move.from]; tempState[move.from] = null;
-                        let ev = minimax(tempState, depth - 1, alpha, beta, true);
-                        minEval = Math.min(minEval, ev); beta = Math.min(beta, ev); if (beta <= alpha) break;
-                    }
-                    return minEval;
-                }
-            }
-
-            self.onmessage = function(e) {
-                const { boardState } = e.data;
-                let moves = getAllValidMovesWorker('b', boardState);
-                if (moves.length === 0) { self.postMessage(null); return; }
-
-                let bestMove = moves; let maxScore = -Infinity;
+            if (isMaximizing) {
+                let maxEval = -Infinity;
                 for (let move of moves) {
-                    let tempState = [...boardState]; tempState[move.to] = tempState[move.from]; tempState[move.from] = null;
-                    let score = minimax(tempState, 4, -Infinity, Infinity, false);
-                    if (score > maxScore) { maxScore = score; bestMove = move; }
+                    let tempState = [...state]; tempState[move.to] = tempState[move.from]; tempState[move.from] = null;
+                    let ev = minimax(tempState, depth - 1, alpha, beta, false);
+                    maxEval = Math.max(maxEval, ev); alpha = Math.max(alpha, ev); if (beta <= alpha) break;
                 }
-                self.postMessage(bestMove);
-            };
-        `;
-
-        const blob = new Blob([workerCode], { type: 'application/javascript' });
-        const aiWorker = new Worker(URL.createObjectURL(blob));
+                return maxEval;
+            } else {
+                let minEval = Infinity;
+                for (let move of moves) {
+                    let tempState = [...state]; tempState[move.to] = tempState[move.from]; tempState[move.from] = null;
+                    let ev = minimax(tempState, depth - 1, alpha, beta, true);
+                    minEval = Math.min(minEval, ev); beta = Math.min(beta, ev); if (beta <= alpha) break;
+                }
+                return minEval;
+            }
+        }
 
         function makeAIMove() {
             if (!gameActive) return;
             document.getElementById('thinking-ui').style.display = 'flex';
-            aiWorker.postMessage({ boardState });
-        }
+            
+            setTimeout(() => {
+                let moves = getAllValidMoves('b', boardState);
+                if (moves.length === 0) { document.getElementById('thinking-ui').style.display = 'none'; finalizeTurn(); return; }
 
-        aiWorker.onmessage = function(e) {
-            document.getElementById('thinking-ui').style.display = 'none';
-            const bestMove = e.data;
-            if (bestMove) { executeMove(bestMove.from, bestMove.to, bestMove); } 
-            else { finalizeTurn(); }
-        };
+                let bestMove = moves; let maxScore = -Infinity;
+                for (let move of moves) {
+                    let tempState = [...boardState]; tempState[move.to] = tempState[move.from]; tempState[move.from] = null;
+                    let score = minimax(tempState, 3, -Infinity, Infinity, false);
+                    if (score > maxScore) { maxScore = score; bestMove = move; }
+                }
+                document.getElementById('thinking-ui').style.display = 'none';
+                executeMove(bestMove.from, bestMove.to, bestMove);
+            }, 100);
+        }
+        // --- ГРАФИКА, ЧАСЫ И ОБРАБОТКА ХОДОВ ---
         const boardEl = document.getElementById('chessboard');
 
         function createVisualBoard() {
@@ -458,7 +421,7 @@
                 if (check) showModal('Мат! 🏆', currentTurn === 'w' ? 'Компьютер победил!' : 'Вы победили!');
                 else showModal('Ничья 🤝', 'На доске Пат.'); return;
             }
-            if (currentTurn === 'b' && gameActive) setTimeout(makeAIMove, 200);
+            if (currentTurn === 'b' && gameActive) makeAIMove();
         }
 
         function hasValidMoves(color) {
